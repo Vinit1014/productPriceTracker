@@ -7,19 +7,19 @@ const Navbar = () => {
     const [error, setError] = useState<string | null>(null)
 
     const handleSearch = (searchTerm: string, minPrice: number, maxPrice: number) => {
-        try {
-          if (!products) return
+        // try {
+        //   if (!products) return
     
-          const filtered = products.filter(product => 
-            product.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-            product.currentPrice >= minPrice &&
-            (maxPrice === 0 || product.currentPrice <= maxPrice)
-          )
-          setFilteredProducts(filtered)
-          setError(null)
-        } catch (err) {
-          setError('An error occurred while filtering products.')
-        }
+        //   const filtered = products.filter(product => 
+        //     product.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        //     product.currentPrice >= minPrice &&
+        //     (maxPrice === 0 || product.currentPrice <= maxPrice)
+        //   )
+        //   setFilteredProducts(filtered)
+        //   setError(null)
+        // } catch (err) {
+        //   setError('An error occurred while filtering products.')
+        // }
     }
     return (
         <div className='bg-white flex items-center justify-between px-6 py-2 drop-shadow-md'> 

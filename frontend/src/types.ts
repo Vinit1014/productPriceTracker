@@ -3,13 +3,13 @@ export interface Product {
     url: string
     title: string
     description: string
-    currentPrice: number
+    currentPrice: string
     reviews: number
-    totalPurchases: number
+    totalRatings: string
     priceHistory: PriceHistoryItem[]
-  }
+}
   
 export interface PriceHistoryItem {
     date: string
-    price: number
+    price: string
 }
