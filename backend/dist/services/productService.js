@@ -42,18 +42,13 @@ const puppeteer = require('puppeteer');
 const formatDate = require('../helper/Date');
 const scrapeProductDetails = (url) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Launch Puppeteer browser
         const browser = yield puppeteer.launch({
-            headless: true, // Run in headless mode
-            args: ['--no-sandbox', '--disable-setuid-sandbox'] // Required for environments like Linux servers
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
-        // Open a new page
         const page = yield browser.newPage();
-        // Set a user-agent to simulate a real browser
         yield page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36');
-        // Navigate to the product URL
         yield page.goto(url, { waitUntil: 'networkidle2' });
-        // Get the HTML content of the page
         const html = yield page.content();
         const $ = cheerio.load(html);
         const title = $('span.VU-ZEz').text().trim();
@@ -70,7 +65,6 @@ const scrapeProductDetails = (url) => __awaiter(void 0, void 0, void 0, function
         console.log(price);
         // console.log(reviews);
         // console.log(ratings);
-        // Close the browser
         yield browser.close();
         return {
             title,
