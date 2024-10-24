@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { scrapeProductDetails } from '../services/productService';
+import { recheckProductPrice, scrapeProductDetails } from '../services/productService';
 import Product from '../models/Product';
 const formatDate = require('../helper/Date');
 
@@ -30,7 +30,7 @@ export const getProductDetails = async (req: Request, res: Response): Promise<Re
     if (existingProduct) {
       // Check if there is already a price history record for the current date
       const existingPriceRecord = existingProduct.priceHistory.find((record) => record.date === currentDate);
-    
+  
       if (existingPriceRecord) {
         // If a record for the current date exists, update the price
         existingPriceRecord.price = parseInt(productDetails.price, 10);
@@ -56,6 +56,7 @@ export const getProductDetails = async (req: Request, res: Response): Promise<Re
     } else {
       // If the product does not exist, create a new record
       const newProduct = new Product({
+        url: url,
         title: productDetails.title,  
         description: productDetails.description,
         currentPrice: parseInt(productDetails.price, 10),
@@ -91,5 +92,17 @@ export const getAllProducts = async (req: Request, res: Response): Promise<Respo
     }); // Send the array of products as the response
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
+  }
+};
+
+
+export const recheckPriceController = async (req: Request, res: Response):Promise<Response> => {
+  const { productId } = req.params;
+  console.log(productId);
+  try {
+    const updatedProduct = await recheckProductPrice(productId);
+    return res.status(200).json({ message: 'Price rechecked successfully', product: updatedProduct });
+  } catch (error:any) {
+    return res.status(500).json({ message: 'Error rechecking price', error: error.message });
   }
 };

@@ -29,12 +29,14 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct }) => {
         throw new Error('Failed to fetch product details');
       }
       
-      const product = await response.json();
-      onAddProduct(product);
-      setUrl('');
+      const data = await response.json();
+      console.log("Product fetched from backend "+data.product);
+      
+      onAddProduct(data.product);
     } catch (error) {
       console.error(error);
     } finally {
+      setUrl('');
       setLoading(false);
     }
   };

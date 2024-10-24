@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllProducts = exports.getProductDetails = void 0;
+exports.recheckPriceController = exports.getAllProducts = exports.getProductDetails = void 0;
 const productService_1 = require("../services/productService");
 const Product_1 = __importDefault(require("../models/Product"));
 const formatDate = require('../helper/Date');
@@ -61,6 +61,7 @@ const getProductDetails = (req, res) => __awaiter(void 0, void 0, void 0, functi
         else {
             // If the product does not exist, create a new record
             const newProduct = new Product_1.default({
+                url: url,
                 title: productDetails.title,
                 description: productDetails.description,
                 currentPrice: parseInt(productDetails.price, 10),
@@ -99,3 +100,15 @@ const getAllProducts = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.getAllProducts = getAllProducts;
+const recheckPriceController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { productId } = req.params;
+    console.log(productId);
+    try {
+        const updatedProduct = yield (0, productService_1.recheckProductPrice)(productId);
+        return res.status(200).json({ message: 'Price rechecked successfully', product: updatedProduct });
+    }
+    catch (error) {
+        return res.status(500).json({ message: 'Error rechecking price', error: error.message });
+    }
+});
+exports.recheckPriceController = recheckPriceController;

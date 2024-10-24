@@ -31,10 +31,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.scrapeProductDetails = void 0;
+exports.recheckProductPrice = exports.scrapeProductDetails = void 0;
 const cheerio = __importStar(require("cheerio"));
+const Product_1 = __importDefault(require("../models/Product"));
 const puppeteer = require('puppeteer');
+const formatDate = require('../helper/Date');
 const scrapeProductDetails = (url) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Launch Puppeteer browser
@@ -81,3 +86,35 @@ const scrapeProductDetails = (url) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.scrapeProductDetails = scrapeProductDetails;
+const recheckProductPrice = (productId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const product = yield Product_1.default.findById(productId);
+        if (!product)
+            throw new Error('Product not found');
+        const { price: newPrice } = yield (0, exports.scrapeProductDetails)(product.url);
+        const currentDate = formatDate(new Date());
+        const existingPriceRecord = product.priceHistory.find((record) => record.date === currentDate);
+        if (existingPriceRecord) {
+            existingPriceRecord.price = parseInt(newPrice, 10);
+        }
+        else {
+            // If no record for the current date exists, add a new one
+            product.priceHistory.push({
+                date: currentDate,
+                price: parseInt(newPrice, 10),
+            });
+        }
+        // Update the current price
+        product.currentPrice = parseInt(newPrice, 10);
+        // // Update product with the new price
+        // product.priceHistory.push({ date: currentDate, price: parseInt(newPrice) });
+        // product.currentPrice = parseInt(newPrice);
+        yield product.save();
+        return product;
+    }
+    catch (error) {
+        console.error('Error rechecking product price:', error);
+        throw error;
+    }
+});
+exports.recheckProductPrice = recheckProductPrice;

@@ -1,5 +1,7 @@
 import * as cheerio from 'cheerio';
+import Product from '../models/Product';
 const puppeteer = require('puppeteer');
+const formatDate = require('../helper/Date');
 
 export const scrapeProductDetails = async (url: string) => {
   try {
@@ -50,4 +52,41 @@ export const scrapeProductDetails = async (url: string) => {
       console.error("Error scraping product details:", error);
       throw error;
   }  
+};
+
+
+export const recheckProductPrice = async (productId: string) => {
+  try {
+    const product = await Product.findById(productId);
+    if (!product) throw new Error('Product not found');
+
+    const { price: newPrice } = await scrapeProductDetails(product.url);
+
+    const currentDate = formatDate(new Date());
+
+    const existingPriceRecord = product.priceHistory.find((record) => record.date === currentDate);
+
+    if (existingPriceRecord) {
+      existingPriceRecord.price = parseInt(newPrice,10);
+    } else {
+      // If no record for the current date exists, add a new one
+      product.priceHistory.push({
+        date: currentDate,
+        price: parseInt(newPrice,10),
+      });
+    }
+
+    // Update the current price
+    product.currentPrice = parseInt(newPrice,10);
+
+    // // Update product with the new price
+    // product.priceHistory.push({ date: currentDate, price: parseInt(newPrice) });
+    // product.currentPrice = parseInt(newPrice);
+
+    await product.save();
+    return product;
+  } catch (error) {
+    console.error('Error rechecking product price:', error);
+    throw error;
+  }
 };

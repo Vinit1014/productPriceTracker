@@ -4,13 +4,13 @@ import { Product } from '../types';
 interface ProductCardProps {
   product: Product;
   onRecheckPrice: (id: string) => void;
+  loading: boolean;
+  error: string | null;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, onRecheckPrice }) => {
-  // Define the character limit for the description
+const ProductCard: React.FC<ProductCardProps> = ({ product, onRecheckPrice, loading, error }) => {
   const characterLimit = 300;
-
-  // Truncate the description if it exceeds the character limit
+  
   const truncatedDescription =
     product.description.length > characterLimit
       ? product.description.slice(0, characterLimit) + '...'
@@ -32,11 +32,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onRecheckPrice }) =>
         ))}
       </ul>
       <button
-        onClick={() => onRecheckPrice(product.id)}
-        className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+        onClick={() => onRecheckPrice(product._id)}
+        disabled={loading}
+        className={`mt-4 px-4 py-2 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+          loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600 focus:ring-green-500'
+        }`}
       >
-        Recheck Price
+        {loading ? 'Rechecking...' : 'Recheck Price'}
       </button>
+      {error && <p className="text-red-500 mt-2">{error}</p>}
     </div>
   );
 };
