@@ -9,31 +9,34 @@ interface ProductFormProps {
 const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct }) => {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log(url);
-  },[url])
+  }, [url]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
+    setError('');
+
     try {
       const response = await fetch(`${BASE_URL}/api/product`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url })
+        body: JSON.stringify({ url }),
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch product details');
       }
-      
+
       const data = await response.json();
-      console.log("Product fetched from backend "+data.product);
-      
+      console.log('Product fetched from backend: ' + data.product);
+
       onAddProduct(data.product);
     } catch (error) {
+      setError('Enter a valid Flipkart product URL'); 
       console.error(error);
     } finally {
       setUrl('');
@@ -60,6 +63,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct }) => {
           {loading ? 'Fetching...' : 'Fetch Details'}
         </button>
       </div>
+      
+      {error && <p className="text-red-500 text-center mt-2">{error}</p>}
     </form>
   );
 };
