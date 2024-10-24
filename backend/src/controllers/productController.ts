@@ -19,33 +19,27 @@ export const getProductDetails = async (req: Request, res: Response): Promise<Re
     const productDetails = await scrapeProductDetails(url);
     console.log(productDetails);
     
-    // Format the current date using the helper function
     const currentDate = formatDate(new Date());
     console.log(currentDate);
     
-    // Check if the product already exists in the database
     const existingProduct = await Product.findOne({ title: productDetails.title });
     console.log("Existing one: " + existingProduct);
     
     if (existingProduct) {
-      // Check if there is already a price history record for the current date
       const existingPriceRecord = existingProduct.priceHistory.find((record) => record.date === currentDate);
   
       if (existingPriceRecord) {
-        // If a record for the current date exists, update the price
         existingPriceRecord.price = parseInt(productDetails.price, 10);
       } else {
-        // If no record for the current date exists, add a new record
         existingProduct.priceHistory.push({
           date: currentDate,
           price: parseInt(productDetails.price, 10),
         });
       }
       
-      // Update the current price
       existingProduct.currentPrice = parseInt(productDetails.price, 10);
     
-      // Save the updated product
+
       await existingProduct.save();
 
       // Return the updated product
@@ -54,7 +48,6 @@ export const getProductDetails = async (req: Request, res: Response): Promise<Re
         product: existingProduct
       });
     } else {
-      // If the product does not exist, create a new record
       const newProduct = new Product({
         url: url,
         title: productDetails.title,  
@@ -71,7 +64,6 @@ export const getProductDetails = async (req: Request, res: Response): Promise<Re
       });
       await newProduct.save();
 
-      // Return the newly created product
       return res.json({
         message: 'Product created successfully',
         product: newProduct
@@ -85,11 +77,11 @@ export const getProductDetails = async (req: Request, res: Response): Promise<Re
 
 export const getAllProducts = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const products = await Product.find(); // Fetch all products from the database
+    const products = await Product.find(); 
     return res.json({
       message: 'Products fetched successfully',
       products
-    }); // Send the array of products as the response
+    });
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }

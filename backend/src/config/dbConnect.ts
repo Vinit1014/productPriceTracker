@@ -1,4 +1,4 @@
-// config/dbConnect.js
+
 const mongoose = require('mongoose');
 
 const dbConnect = async () => {

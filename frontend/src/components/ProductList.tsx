@@ -6,7 +6,7 @@ import { BASE_URL } from '../utils/constants'
 
 interface ProductListProps {
   products: Product[]
-  fetchProducts: () => void // Fetch products function passed from App
+  fetchProducts: () => void 
 }
 
 const ProductList: React.FC<ProductListProps> = ({ products, fetchProducts }) => {
@@ -14,20 +14,19 @@ const ProductList: React.FC<ProductListProps> = ({ products, fetchProducts }) =>
   const [error, setError] = useState<string | null>(null)
 
   const handleRecheckPrice = async (id: string) => {
-    setLoading(id) // Set loading state for the current product
-    setError(null)  // Reset error state before request
+    setLoading(id) 
+    setError(null) 
 
     try {
       await axios.put(`${BASE_URL}/api/products/${id}`)
       console.log(`Price rechecked for product: ${id}`)
 
-      // Call fetchProducts to refresh the list after price update
       fetchProducts();
     } catch (err) {
       console.error('Error rechecking price:', err)
       setError('Failed to recheck price. Please try again.')
     } finally {
-      setLoading(null) // Clear loading state after request completes
+      setLoading(null) 
     }
   }
 
