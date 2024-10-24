@@ -1,4 +1,4 @@
-Here’s a structured setup guide for your Flipkart product sharing web application, which includes both frontend and backend instructions. This will help users clone your repository and get the application running quickly.
+Here’s a structured setup guide for the Flipkart product price tracker web application, which includes both frontend and backend instructions. This will help users clone your repository and get the application running quickly.
 
 ### Setup Instructions for Flipkart Product Sharing Web Application
 
