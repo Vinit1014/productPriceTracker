@@ -8,7 +8,7 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
     return (
         <div className='bg-white flex items-center justify-between px-6 py-2 drop-shadow-md'> 
-            <h2 className='text-xl font-medium text-slate-700 py-2'>Price Tracker</h2>
+            <h2 className='text-xl font-medium text-slate-700 py-2'>PriceTracker</h2>
             <SearchAndFilter onSearch={onSearch}/>
         </div>
     )
