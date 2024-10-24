@@ -9,7 +9,6 @@ interface ProductFormProps {
 const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct }) => {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   useEffect(()=>{
     console.log(url);
