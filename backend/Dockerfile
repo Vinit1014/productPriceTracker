@@ -11,7 +11,4 @@ RUN npm ci
 
 COPY . .
 
-# RUN chmod -R 755 /app/node_modules
-RUN if [ -d /app/node_modules ]; then chmod -R 755 /app/node_modules; fi
-
 CMD ["npm", "run", "start"]
