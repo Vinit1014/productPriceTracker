@@ -1,5 +1,6 @@
 import * as cheerio from 'cheerio';
 import Product from '../models/Product';
+import { executablePath } from 'puppeteer';
 const puppeteer = require('puppeteer');
 const formatDate = require('../helper/Date');
 
@@ -7,7 +8,8 @@ export const scrapeProductDetails = async (url: string) => {
   try {
     const browser = await puppeteer.launch({
         headless: true, 
-        args: ['--no-sandbox', '--disable-setuid-sandbox'] 
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        executablePath: process.env.CHROME_BIN || undefined
     });
 
     const page = await browser.newPage();

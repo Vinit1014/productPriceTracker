@@ -29,7 +29,7 @@ const ProductList: React.FC<ProductListProps> = ({ products, fetchProducts }) =>
       setLoading(null) 
     }
   }
-
+  
   if (!products || products.length === 0) {
     return <p className="text-center text-red-500 m-12">No products found. Try adding a product or adjusting your search.</p>
   }
