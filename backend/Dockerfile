@@ -7,8 +7,10 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm ci
+RUN npm install -g typescript && npm ci
 
 COPY . .
+
+RUN chmod -R 755 /app/node_modules
 
 CMD ["npm", "run", "start"]
