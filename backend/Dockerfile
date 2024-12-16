@@ -30,4 +30,4 @@ EXPOSE 3000
 USER pptruser
 
 # Define the command to start the application
-CMD ["npx", "ts-node", "index.ts"]
+CMD ["npx", "ts-node", "src/index.ts"]
