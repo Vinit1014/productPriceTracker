@@ -8,20 +8,20 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
 # Set the working directory
 WORKDIR /usr/src/app
 
-# Use root user to set permissions
+# Use root user to ensure proper permissions
 USER root
 
 # Copy package.json and package-lock.json for dependencies installation
 COPY package*.json ./
 
-# Install dependencies, including TypeScript
-RUN npm ci && npm install typescript --save-dev
+# Install project dependencies and ts-node
+RUN npm ci && npm install ts-node typescript --save-dev
 
 # Copy the rest of the application source code
 COPY . .
 
-# Compile TypeScript to JavaScript
-RUN npx tsc
+# Ensure ts-node is executable
+RUN chmod +x ./node_modules/.bin/ts-node
 
 # Expose the port your app uses (optional)
 EXPOSE 3000
@@ -29,5 +29,5 @@ EXPOSE 3000
 # Switch to non-root user for security
 USER pptruser
 
-# Run the compiled JavaScript file
-CMD ["node", "dist/index.js"]
+# Define the command to start the application
+CMD ["npx", "ts-node", "index.ts"]
