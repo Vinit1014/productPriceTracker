@@ -11,7 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 const mongoose = require('mongoose');
 const dbConnect = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield mongoose.connect(process.env.MONGODB_URL, {});
+        // await mongoose.connect(process.env.MONGODB_URL, {
+        yield mongoose.connect('mongodb+srv://v1n1ts0010:lH1KmWhuLRy9pS5u@pricetracker.0av8v.mongodb.net/?retryWrites=true&w=majority&appName=priceTracker', {});
         console.log('MongoDB connected');
     }
     catch (error) {
