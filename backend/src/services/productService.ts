@@ -7,10 +7,21 @@ const formatDate = require('../helper/Date');
 export const scrapeProductDetails = async (url: string) => {
   try {
     const browser = await puppeteer.launch({
-        executablePath: process.env.NODE_ENV === 'production' ? process.env.PUPPETEER_EXECUTABLE_PATH  : puppeteer.executablePath(),
-        headless: true, 
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
-        
+        // executablePath: process.env.NODE_ENV === 'production' ? process.env.PUPPETEER_EXECUTABLE_PATH  : puppeteer.executablePath(),
+        // headless: true, 
+        // args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        executablePath: '/usr/bin/google-chrome-stable',
+        headless: true,
+        args: [
+          '--no-sandbox', 
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',
+          '--disable-accelerated-2d-canvas',
+          '--no-first-run',
+          '--no-zygote',
+          '--single-process',
+          '--disable-gpu'
+        ]
     });
 
     const page = await browser.newPage();
