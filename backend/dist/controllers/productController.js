@@ -18,6 +18,7 @@ const Product_1 = __importDefault(require("../models/Product"));
 const formatDate = require('../helper/Date');
 const getProductDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { url } = req.body;
+    console.log("Got the url from frontend " + url);
     if (!url) {
         return res.status(400).json({ error: 'URL is required' });
     }

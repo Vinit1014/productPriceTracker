@@ -42,11 +42,24 @@ const puppeteer = require('puppeteer');
 const formatDate = require('../helper/Date');
 const scrapeProductDetails = (url) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const browser = yield puppeteer.launch({
-            executablePath: process.env.NODE_ENV === 'production' ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath(),
-            headless: true,
-            args: ['--no-sandbox', '--disable-setuid-sandbox'],
-        });
+        const browser = yield puppeteer.launch();
+        // const browser = await puppeteer.launch({
+        //     executablePath: process.env.NODE_ENV === 'production' ? process.env.PUPPETEER_EXECUTABLE_PATH  : puppeteer.executablePath(),
+        //     headless: true, 
+        //     args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        // executablePath: '/usr/bin/google-chrome-stable',
+        // headless: true,
+        // args: [
+        //   '--no-sandbox', 
+        //   '--disable-setuid-sandbox',
+        //   '--disable-dev-shm-usage',
+        //   '--disable-accelerated-2d-canvas',
+        //   '--no-first-run',
+        //   '--no-zygote',
+        //   '--single-process',
+        //   '--disable-gpu'
+        // ]
+        // });
         const page = yield browser.newPage();
         yield page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36');
         yield page.goto(url, { waitUntil: 'networkidle2' });

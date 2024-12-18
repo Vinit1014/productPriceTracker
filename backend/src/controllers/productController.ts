@@ -5,7 +5,8 @@ const formatDate = require('../helper/Date');
 
 export const getProductDetails = async (req: Request, res: Response): Promise<Response> => {
   const { url } = req.body;
-
+  console.log("Got the url from frontend "+ url);
+  
   if (!url) {
     return res.status(400).json({ error: 'URL is required' });
   }
