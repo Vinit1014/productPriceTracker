@@ -5,7 +5,6 @@ const formatDate = require('../helper/Date');
 
 export const getProductDetails = async (req: Request, res: Response): Promise<Response> => {
   const { url } = req.body;
-  console.log("Got the url from frontend "+ url);
   
   if (!url) {
     return res.status(400).json({ error: 'URL is required' });
@@ -18,13 +17,13 @@ export const getProductDetails = async (req: Request, res: Response): Promise<Re
 
   try {
     const productDetails = await scrapeProductDetails(url);
-    console.log(productDetails);
+    // console.log(productDetails);
     
     const currentDate = formatDate(new Date());
-    console.log(currentDate);
+    // console.log(currentDate);
     
     const existingProduct = await Product.findOne({ title: productDetails.title });
-    console.log("Existing one: " + existingProduct);
+    // console.log("Existing one: " + existingProduct);
     
     if (existingProduct) {
       const existingPriceRecord = existingProduct.priceHistory.find((record) => record.date === currentDate);
@@ -39,7 +38,6 @@ export const getProductDetails = async (req: Request, res: Response): Promise<Re
       }
       
       existingProduct.currentPrice = parseInt(productDetails.price, 10);
-    
 
       await existingProduct.save();
 
@@ -49,11 +47,13 @@ export const getProductDetails = async (req: Request, res: Response): Promise<Re
         product: existingProduct
       });
     } else {
+      // console.log("Inside else clause");
+      
       const newProduct = new Product({
         url: url,
         title: productDetails.title,  
         description: productDetails.description,
-        currentPrice: parseInt(productDetails.price, 10),
+        currentPrice: parseInt(productDetails.price.replace(/,/g, ""), 10),
         reviews: productDetails.reviews,
         totalRatings: productDetails.ratings,
         priceHistory: [
@@ -72,6 +72,7 @@ export const getProductDetails = async (req: Request, res: Response): Promise<Re
     }
     
   } catch (error: any) {
+    console.log("Inside pC "+error);
     return res.status(500).json({ error: error.message });
   }
 };

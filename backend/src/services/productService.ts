@@ -1,37 +1,28 @@
 import * as cheerio from 'cheerio';
 import Product from '../models/Product';
-import { executablePath } from 'puppeteer';
 const puppeteer = require('puppeteer');
 const formatDate = require('../helper/Date');
 
 export const scrapeProductDetails = async (url: string) => {
-  try {
-    const browser = await puppeteer.launch();
-    // const browser = await puppeteer.launch({
-    //     executablePath: process.env.NODE_ENV === 'production' ? process.env.PUPPETEER_EXECUTABLE_PATH  : puppeteer.executablePath(),
-    //     headless: true, 
-    //     args: ['--no-sandbox', '--disable-setuid-sandbox'],
-        // executablePath: '/usr/bin/google-chrome-stable',
-        // headless: true,
-        // args: [
-        //   '--no-sandbox', 
-        //   '--disable-setuid-sandbox',
-        //   '--disable-dev-shm-usage',
-        //   '--disable-accelerated-2d-canvas',
-        //   '--no-first-run',
-        //   '--no-zygote',
-        //   '--single-process',
-        //   '--disable-gpu'
-        // ]
-    // });
 
+  const browser = await puppeteer.launch({
+    args: [
+      "--disable-setuid-sandbox",
+      "--no-sandbox",
+      "--single-process",
+      "--no-zygote",
+    ],
+    executablePath: process.env.NODE_ENV === 'production' ? process.env.PUPPETEER_EXECUTABLE_PATH  : puppeteer.executablePath(),
+  });
+  try {
     const page = await browser.newPage();
 
-    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36');
+    // await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36');
 
-    await page.goto(url, { waitUntil: 'networkidle2' });
+    await page.goto(url);
 
     const html = await page.content();
+    
     const $ = cheerio.load(html);
     const title = $('span.VU-ZEz').text().trim();  
     let description = $('div.Xbd0Sd').text().trim(); 
@@ -42,14 +33,8 @@ export const scrapeProductDetails = async (url: string) => {
     const reviews = $('div.ipqd2A').first().text().trim(); 
     const ratings = $('span.Wphh3N').first().text().split(' ')[0].trim();
 
-    // Log the HTML content
-    // console.log(title);
-    // console.log(description);
-    console.log(price);
-    // console.log(reviews);
-    // console.log(ratings);
+    // console.log(price);
     
-    await browser.close();
     return {
       title,
       description,
@@ -60,7 +45,9 @@ export const scrapeProductDetails = async (url: string) => {
   } catch (error) {
       console.error("Error scraping product details:", error);
       throw error;
-  }  
+  }  finally {
+    await browser.close();
+  }
 };
 
 

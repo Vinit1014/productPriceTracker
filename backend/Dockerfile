@@ -3,10 +3,8 @@ FROM ghcr.io/puppeteer/puppeteer:19.7.2
 
 # Set environment variables
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable \
-    NODE_ENV=production
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable 
 
-# Set the working directory
 WORKDIR /usr/src/app
 
 # Use root user to ensure proper permissions
@@ -29,7 +27,7 @@ RUN npm run build
 RUN chmod +x ./node_modules/.bin/ts-node
 
 # Expose the port (use Render's default)
-EXPOSE 10000
+EXPOSE 5000
 
 # Switch to non-root user for security
 USER pptruser
