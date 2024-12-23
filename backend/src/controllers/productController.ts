@@ -29,15 +29,15 @@ export const getProductDetails = async (req: Request, res: Response): Promise<Re
       const existingPriceRecord = existingProduct.priceHistory.find((record) => record.date === currentDate);
   
       if (existingPriceRecord) {
-        existingPriceRecord.price = parseInt(productDetails.price, 10);
+        existingPriceRecord.price = parseInt(productDetails.price.replace(/,/g, ""), 10);
       } else {
         existingProduct.priceHistory.push({
           date: currentDate,
-          price: parseInt(productDetails.price, 10),
+          price: parseInt(productDetails.price.replace(/,/g, ""), 10),
         });
       }
       
-      existingProduct.currentPrice = parseInt(productDetails.price, 10);
+      existingProduct.currentPrice = parseInt(productDetails.price.replace(/,/g, ""), 10);
 
       await existingProduct.save();
 
