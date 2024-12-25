@@ -18,7 +18,6 @@ const Product_1 = __importDefault(require("../models/Product"));
 const formatDate = require('../helper/Date');
 const getProductDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { url } = req.body;
-    console.log("Got the url from frontend " + url);
     if (!url) {
         return res.status(400).json({ error: 'URL is required' });
     }
@@ -28,23 +27,23 @@ const getProductDetails = (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
     try {
         const productDetails = yield (0, productService_1.scrapeProductDetails)(url);
-        console.log(productDetails);
+        console.log("I am " + parseInt(productDetails.price.replace(/,/g, ""), 10));
         const currentDate = formatDate(new Date());
-        console.log(currentDate);
+        // console.log(currentDate);
         const existingProduct = yield Product_1.default.findOne({ title: productDetails.title });
-        console.log("Existing one: " + existingProduct);
+        // console.log("Existing one: " + existingProduct);
         if (existingProduct) {
             const existingPriceRecord = existingProduct.priceHistory.find((record) => record.date === currentDate);
             if (existingPriceRecord) {
-                existingPriceRecord.price = parseInt(productDetails.price, 10);
+                existingPriceRecord.price = parseInt(productDetails.price.replace(/,/g, ""), 10);
             }
             else {
                 existingProduct.priceHistory.push({
                     date: currentDate,
-                    price: parseInt(productDetails.price, 10),
+                    price: parseInt(productDetails.price.replace(/,/g, ""), 10),
                 });
             }
-            existingProduct.currentPrice = parseInt(productDetails.price, 10);
+            existingProduct.currentPrice = parseInt(productDetails.price.replace(/,/g, ""), 10);
             yield existingProduct.save();
             // Return the updated product
             return res.json({
@@ -53,11 +52,12 @@ const getProductDetails = (req, res) => __awaiter(void 0, void 0, void 0, functi
             });
         }
         else {
+            // console.log("Inside else clause");
             const newProduct = new Product_1.default({
                 url: url,
                 title: productDetails.title,
                 description: productDetails.description,
-                currentPrice: parseInt(productDetails.price, 10),
+                currentPrice: parseInt(productDetails.price.replace(/,/g, ""), 10),
                 reviews: productDetails.reviews,
                 totalRatings: productDetails.ratings,
                 priceHistory: [
@@ -75,6 +75,7 @@ const getProductDetails = (req, res) => __awaiter(void 0, void 0, void 0, functi
         }
     }
     catch (error) {
+        console.log("Inside pC " + error);
         return res.status(500).json({ error: error.message });
     }
 });

@@ -63,17 +63,17 @@ export const recheckProductPrice = async (productId: string) => {
     const existingPriceRecord = product.priceHistory.find((record) => record.date === currentDate);
 
     if (existingPriceRecord) {
-      existingPriceRecord.price = parseInt(newPrice,10);
+      existingPriceRecord.price = parseInt(newPrice.replace(/,/g, ""), 10);
     } else {
       // If no record for the current date exists, add a new one
       product.priceHistory.push({
         date: currentDate,
-        price: parseInt(newPrice,10),
+        price: parseInt(newPrice.replace(/,/g, ""), 10),
       });
     }
 
     // Update the current price
-    product.currentPrice = parseInt(newPrice,10);
+    product.currentPrice = parseInt(newPrice.replace(/,/g, ""), 10);
 
     // // Update product with the new price
     // product.priceHistory.push({ date: currentDate, price: parseInt(newPrice) });

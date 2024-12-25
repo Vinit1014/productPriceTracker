@@ -17,7 +17,7 @@ export const getProductDetails = async (req: Request, res: Response): Promise<Re
 
   try {
     const productDetails = await scrapeProductDetails(url);
-    // console.log(productDetails);
+    console.log("I am "+parseInt(productDetails.price.replace(/,/g, ""), 10));
     
     const currentDate = formatDate(new Date());
     // console.log(currentDate);
